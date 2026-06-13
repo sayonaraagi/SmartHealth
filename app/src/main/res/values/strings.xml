@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SmartHealth</string>
+    <string name="weight_label">Weight (kg)</string>
+    <string name="height_label">Height (cm)</string>
+    <string name="age_label">Age</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="calculate">Calculate BMI &amp; Calories</string>
+    <string name="bmi_result">BMI: %.1f</string>
+
+    <string name="status_underweight">Underweight</string>
+    <string name="status_normal">Normal weight</string>
+    <string name="status_overweight">Overweight</string>
+    <string name="status_obese">Obese</string>
+
+    <string name="rec_child">Childhood: Specialist supervision required.</string>
+    <string name="rec_adolescent">Adolescent: Check growth charts regularly.</string>
+    <string name="rec_consult">Specialist consultation recommended.</string>
+
+    <string name="calories_title">Energy Balance</string>
+    <string name="maintenance_desc">To maintain current weight:</string>
+    <string name="target_desc">Recommendation for your goal:</string>
+    <string name="kcal_format">%d kcal</string>
+
+    <string name="goal_gain">Weight Gain</string>
+    <string name="goal_maintain">Maintain Weight</string>
+    <string name="goal_loss">Weight Loss</string>
+
+    <string name="theme_dark">Dark Mode</string>
+    <string name="theme_light">Light Mode</string>
+    <string name="theme_color">Theme Color</string>
+    <string name="color_green">Green</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_red">Red</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_yellow">Yellow</string>
+    <string name="lang_toggle">EN</string>
+    <string name="unit_metric">kg-cm</string>
+    <string name="unit_imperial">lb-ft</string>
+    <string name="weight_lb">Weight (lb)</string>
+    <string name="height_ft">Height (ft)</string>
+    <string name="height_in">Height (in)</string>
+</resources>
