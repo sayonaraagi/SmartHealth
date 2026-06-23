@@ -44,6 +44,11 @@ fun InputScreen(
     var result by remember { mutableStateOf<CalculationResult?>(null) }
     var showColorMenu by remember { mutableStateOf(false) }
 
+    // Validation states
+    var weightError by remember { mutableStateOf(false) }
+    var heightError by remember { mutableStateOf(false) }
+    var ageError by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -162,47 +167,88 @@ fun InputScreen(
             // Input Fields
             ModernTextField(
                 value = weight,
-                onValueChange = { if (it.length <= 6) weight = it },
+                onValueChange = { 
+                    if (it.length <= 6) {
+                        weight = it
+                        weightError = false
+                    }
+                },
                 label = if (useMetric) stringResource(R.string.weight_label) else stringResource(R.string.weight_lb),
                 icon = Icons.Default.Edit,
-                keyboardType = KeyboardType.Decimal
+                keyboardType = KeyboardType.Decimal,
+                isError = weightError,
+                errorText = if (weightError) stringResource(R.string.error_weight) else ""
             )
 
             if (useMetric) {
                 ModernTextField(
                     value = heightCm,
-                    onValueChange = { if (it.length <= 3) heightCm = it },
+                    onValueChange = { 
+                        if (it.length <= 3) {
+                            heightCm = it
+                            heightError = false
+                        }
+                    },
                     label = stringResource(R.string.height_label),
                     icon = Icons.Default.Info,
-                    keyboardType = KeyboardType.Number
+                    keyboardType = KeyboardType.Number,
+                    isError = heightError,
+                    errorText = if (heightError) stringResource(R.string.error_height) else ""
                 )
             } else {
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     ModernTextField(
                         value = heightFt,
-                        onValueChange = { if (it.length <= 1) heightFt = it },
+                        onValueChange = { 
+                            if (it.length <= 1) {
+                                heightFt = it
+                                heightError = false
+                            }
+                        },
                         label = stringResource(R.string.height_ft),
                         icon = Icons.Default.Height,
                         keyboardType = KeyboardType.Number,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        isError = heightError
                     )
                     ModernTextField(
                         value = heightIn,
-                        onValueChange = { if (it.length <= 2) heightIn = it },
+                        onValueChange = { 
+                            if (it.length <= 2) {
+                                heightIn = it
+                                heightError = false
+                            }
+                        },
                         label = stringResource(R.string.height_in),
                         icon = Icons.Default.Straighten,
                         keyboardType = KeyboardType.Number,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        isError = heightError
+                    )
+                }
+                if (heightError) {
+                    Text(
+                        text = stringResource(R.string.error_height),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.fillMaxWidth().padding(start = 16.dp, bottom = 16.dp)
                     )
                 }
             }
 
             ModernTextField(
                 value = age,
-                onValueChange = { if (it.length <= 3) age = it },
+                onValueChange = { 
+                    if (it.length <= 3) {
+                        age = it
+                        ageError = false
+                    }
+                },
                 label = stringResource(R.string.age_label),
                 icon = Icons.Default.Person,
-                keyboardType = KeyboardType.Number
+                keyboardType = KeyboardType.Number,
+                isError = ageError,
+                errorText = if (ageError) stringResource(R.string.error_age) else ""
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -221,9 +267,16 @@ fun InputScreen(
                         ((ft * 30.48) + (inch * 2.54)).toInt()
                     }
 
-                    if (wKg > 0 && hCm > 0 && a > 0) {
+                    // Validation Logic
+                    weightError = if (useMetric) (wKg < 2 || wKg > 600) else (wInput < 5 || wInput > 1300)
+                    heightError = hCm < 50 || hCm > 270
+                    ageError = a < 2 || a > 120
+
+                    if (!weightError && !heightError && !ageError) {
                         val bmi = HealthCalculator.calculateBMI(wKg, hCm)
                         result = HealthCalculator.getResult(bmi, wKg, hCm, a, isMale)
+                    } else {
+                        result = null
                     }
                 },
                 modifier = Modifier
@@ -259,23 +312,35 @@ fun ModernTextField(
     label: String,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     keyboardType: KeyboardType,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isError: Boolean = false,
+    errorText: String = ""
 ) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        label = { Text(label) },
-        leadingIcon = { Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(bottom = 16.dp),
-        shape = MaterialTheme.shapes.large,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant
+    Column(modifier = modifier.fillMaxWidth()) {
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            label = { Text(label) },
+            leadingIcon = { Icon(icon, contentDescription = null, tint = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary) },
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+            isError = isError,
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.large,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant
+            )
         )
-    )
+        if (isError && errorText.isNotEmpty()) {
+            Text(
+                text = errorText,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+    }
 }
 
 @Composable

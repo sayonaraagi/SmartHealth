@@ -42,4 +42,7 @@
     <string name="weight_lb">Вес (фунты)</string>
     <string name="height_ft">Рост (футы)</string>
     <string name="height_in">Рост (дюймы)</string>
+    <string name="error_weight">Некорректный вес</string>
+    <string name="error_height">Некорректный рост</string>
+    <string name="error_age">Некорректный возраст</string>
 </resources>

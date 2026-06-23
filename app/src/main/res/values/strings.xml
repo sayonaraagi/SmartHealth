@@ -42,4 +42,7 @@
     <string name="weight_lb">Weight (lb)</string>
     <string name="height_ft">Height (ft)</string>
     <string name="height_in">Height (in)</string>
+    <string name="error_weight">Invalid weight</string>
+    <string name="error_height">Invalid height</string>
+    <string name="error_age">Invalid age</string>
 </resources>
